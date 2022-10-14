@@ -29,7 +29,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val adapter = RepoAdapter(requireContext())
         binding.rvRepos.adapter = adapter
-        adapter.setRepoList(viewModel.mockRepoList)
+        adapter.setData(viewModel.mockRepoList)
     }
 
     override fun onDestroyView() {

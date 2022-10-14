@@ -16,11 +16,16 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         supportFragmentManager.beginTransaction()
-                .replace(R.id.home_container, HomeFragment())
+                .add(R.id.home_container, HomeFragment())
                 .commit()
 
         binding.bnv.setOnItemSelectedListener { item ->
             when(item.itemId) {
+                R.id.bnv_home -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.home_container, HomeFragment())
+                        .commit()
+                }
                 R.id.bnv_gallery -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.home_container, GalleryFragment())
