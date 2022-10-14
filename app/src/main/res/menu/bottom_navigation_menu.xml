@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bnv_home"
+        android:enabled="true"
+        android:icon="@drawable/ic_home_white"
+        android:title="홈"/>
+    <item
+        android:id="@+id/bnv_gallery"
+        android:enabled="true"
+        android:icon="@drawable/ic_gallery_white"
+        android:title="갤러리"/>
+    <item
+        android:id="@+id/bnv_search"
+        android:enabled="true"
+        android:icon="@drawable/ic_search_white"
+        android:title="검색"/>
+</menu>
