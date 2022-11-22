@@ -1,6 +1,6 @@
 package org.sopt.sample.retrofit
 
-data class LoginResponse(
+data class ReqresResponse(
     val `data`: List<Data>,
     val page: Int,
     val per_page: Int,

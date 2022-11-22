@@ -1,4 +1,4 @@
-package org.sopt.sample
+package org.sopt.sample.search
 
 import androidx.fragment.app.Fragment
 
