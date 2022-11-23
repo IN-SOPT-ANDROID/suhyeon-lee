@@ -63,6 +63,8 @@ class HomeFragment: Fragment() {
     }
 
     private fun showUserInfo(response: ReqresResponse) {
-        binding.tvNameTitle.text = response.data[1].email.toString()
+        val adapter = UserInfoAdapter(response.data)
+        binding.rvUserInfo.adapter = adapter
+        //binding.tvNameTitle.text = response.data[1].email.toString()
     }
 }
