@@ -1,8 +1,12 @@
 package org.sopt.sample
 
+import android.R.attr.button
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -10,58 +14,70 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import org.sopt.sample.databinding.ActivityLoginBinding
 
+
 class LoginActivity: AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
-    private var id: String = "a"
-    private var pw: String = "a"
+    private var id: String = ""
+    private var pw: String = ""
     private var mbti: String = ""
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setResultSignUp()
+        clickLoginBtn()
+        clickSignupBtn()
+    } // onCreate()
 
     private fun setResultSignUp() {
         resultLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()){ result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                id = result.data?.getStringExtra("id")?:""
-                pw = result.data?.getStringExtra("pw")?:""
-                mbti = result.data?.getStringExtra("mbti")?:""
-                Snackbar.make(binding.root, "회원가입이 완료되었습니다!", Snackbar.LENGTH_SHORT).show()
-                binding.idInput.setText(id)
-                binding.pwInput.setText(pw)
+            ActivityResultContracts.StartActivityForResult()
+            ) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    // SingupActivity에서 가져온 데이터를 이 파일(LoginActivity.kt)의 변수들에 저장
+                    id = result.data?.getStringExtra("id")?:""
+                    pw = result.data?.getStringExtra("pw")?:""
+                    mbti = result.data?.getStringExtra("mbti")?:""
+                    Snackbar.make(binding.root, "회원가입이 완료되었습니다!", Snackbar.LENGTH_SHORT).show()
+                    // SignupActivity에서 입력받은 id, pw 정보가 이 LoginActivity에서 그대로 보이게
+                    binding.idInput.setText(id)
+                    binding.pwInput.setText(pw)
             }
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        binding.btnLogin.setOnClickListener { // 로그인
-            if (check()) {
+    // 로그인 버튼이 클릭되면 (콜백함수)
+    private fun clickLoginBtn() {
+        binding.btnLogin.setOnClickListener {
+            if (checkInput()) {
                 val intent = Intent(this@LoginActivity, HomeActivity::class.java)
                 intent.putExtra("id", id)
                 intent.putExtra("mbti", mbti)
-
                 startActivity(intent)
             }
         }
+    }
 
-        setResultSignUp()
+    // 입력 받은 로그인 정보를 확인 - 서버 통신에서 바뀌어야지?
+    private fun checkInput(): Boolean {
+        if (id == binding.idInput.text.toString() && pw == binding.pwInput.text.toString()) {
+            Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
+            return true
+        }
+        else {
+            Snackbar.make(binding.root, "가입 정보가 없습니다. 회원가입을 해주세요.", Snackbar.LENGTH_SHORT).show()
+            return false
+        }
+    }
+
+    // 회원가입 버튼이 클릭되면 (콜백함수)
+    private fun clickSignupBtn() {
         binding.btnSignup.setOnClickListener { // 회원가입
             val intent = Intent(this, SignupActivity::class.java)
             resultLauncher.launch(intent)
         }
-
     }
 
-    fun check(): Boolean {
-        if (id == binding.idInput.text.toString() &&
-            pw == binding.pwInput.text.toString()) {
-            Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
-            return true
-        }
-        Snackbar.make(binding.root, "가입 정보가 없습니다. 회원가입을 해주세요.", Snackbar.LENGTH_SHORT).show()
-        return false
-    }
 }
