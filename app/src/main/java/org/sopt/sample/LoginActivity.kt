@@ -7,12 +7,21 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import org.sopt.sample.databinding.ActivityLoginBinding
+import org.sopt.sample.home.UserInfoAdapter
+import org.sopt.sample.retrofit.LoginReqDTO
+import org.sopt.sample.retrofit.LoginResDTO
+import org.sopt.sample.retrofit.ReqresResponse
+import org.sopt.sample.retrofit.ServicePool
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class LoginActivity: AppCompatActivity() {
@@ -21,6 +30,7 @@ class LoginActivity: AppCompatActivity() {
     private var id: String = ""
     private var pw: String = ""
     private var mbti: String = ""
+    private val loginService = ServicePool.srvc_sopt
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,12 +61,7 @@ class LoginActivity: AppCompatActivity() {
     // 로그인 버튼이 클릭되면 (콜백함수)
     private fun clickLoginBtn() {
         binding.btnLogin.setOnClickListener {
-            if (checkInput()) {
-                val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                intent.putExtra("id", id)
-                intent.putExtra("mbti", mbti)
-                startActivity(intent)
-            }
+            tryLogin()
         }
     }
 
@@ -80,4 +85,38 @@ class LoginActivity: AppCompatActivity() {
         }
     }
 
+    private fun tryLogin() {
+        loginService.login(
+            LoginReqDTO(binding.idInput.text.toString(), binding.pwInput.text.toString())
+        ).enqueue(object: Callback<LoginResDTO> {
+            override fun onResponse(
+                call: Call<LoginResDTO>,
+                response: Response<LoginResDTO>
+            ) {
+                if (response.isSuccessful) {
+                    Toast.makeText(this@LoginActivity, "로그인 성공!", Toast.LENGTH_SHORT).show()
+                    Log.d("LOGIN/SUCCESS", "LOGIN 성공!! $response")
+                    val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                    //intent.putExtra("id", binding.idInput.toString())
+                    //intent.putExtra("mbti", binding.pwInput.toString())
+                    startActivity(intent)
+                }
+                else {
+                    Toast.makeText(this@LoginActivity, "로그인이 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    Log.d(
+                        "LOGIN/FAIL",
+                        "$response, ${binding.idInput.text}, ${binding.pwInput.text}"
+                    )
+                }
+            }
+
+            override fun onFailure(
+                call: Call<LoginResDTO>,
+                t: Throwable
+            ) {
+                Snackbar.make(binding.root, "서버통신 실패", Snackbar.LENGTH_SHORT).show()
+                Log.d("LOGIN/SERVER-COM", "LOGIN 실패ㅠㅠ {$t.message}")
+            }
+        })
+    }
 }

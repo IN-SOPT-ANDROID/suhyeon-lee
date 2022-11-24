@@ -3,6 +3,8 @@ package org.sopt.sample.retrofit
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.sopt.sample.retrofit.ApiFactory.retrofit_reqres
 import org.sopt.sample.retrofit.ApiFactory.retrofit_sopt
 import retrofit2.Retrofit
@@ -31,5 +33,5 @@ object ApiFactory {
 
 object ServicePool {
     val srvc_reqres = ApiFactory.create<UserInfoService>(retrofit_reqres)
-    //val srvc_sopt = ApiFactory.create<UserInfoService>(retrofit_sopt)
+    val srvc_sopt = ApiFactory.create<SoptService>(retrofit_sopt)
 }
