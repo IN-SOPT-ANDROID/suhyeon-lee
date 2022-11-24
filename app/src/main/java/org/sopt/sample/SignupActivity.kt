@@ -6,16 +6,25 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import org.sopt.sample.databinding.ActivitySignupBinding
+import org.sopt.sample.retrofit.ServicePool
+import org.sopt.sample.retrofit.SignupReqDTO
+import org.sopt.sample.retrofit.SignupResDTO
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class SignupActivity: AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
+    private val signupService = ServicePool.srvc_sopt
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,14 +85,46 @@ class SignupActivity: AppCompatActivity() {
 
     private fun clickBtn() {
         binding.btnSignup.setOnClickListener {
-            if (check()) {
-                val intent = Intent(this@SignupActivity, LoginActivity::class.java)
-                intent.putExtra("id", binding.idInput.text.toString())
-                intent.putExtra("pw", binding.pwInput.text.toString())
-                intent.putExtra("mbti", binding.mbtiInput.text.toString())
-                setResult(RESULT_OK, intent)
-                finish()
-            }
+            trySignin()
         }
+    }
+
+    private fun trySignin() {
+        signupService.signup(
+            SignupReqDTO(
+                binding.idInput.text.toString(),
+                binding.pwInput.text.toString(),
+                binding.mbtiInput.text.toString()
+            )
+        ).enqueue(object: Callback<SignupResDTO> {
+            override fun onResponse(
+                call: Call<SignupResDTO>,
+                response: Response<SignupResDTO>
+            ) {
+                if (response.isSuccessful) {
+                    Toast.makeText(this@SignupActivity, "회원가입 성공!", Toast.LENGTH_SHORT).show()
+                    Log.d("SIGNUP/SUCCESS", "회원가입 성공!! $response")
+                    val intent = Intent(this@SignupActivity, LoginActivity::class.java)
+                    intent.putExtra("id", binding.idInput.text.toString())
+                    intent.putExtra("pw", binding.pwInput.text.toString())
+                    intent.putExtra("mbti", binding.mbtiInput.text.toString())
+                    setResult(RESULT_OK, intent)
+                    finish()
+                }
+                else { // 통신은 성공했으나 회원가입 실패
+                    Log.d("SIGNUP/FAIL", "$response, ${binding.idInput.text}, ${binding.pwInput.text}")
+                    Toast.makeText(this@SignupActivity, "회원가입 실패.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(
+                call: Call<SignupResDTO>,
+                t: Throwable
+            ) {
+                Toast.makeText(this@SignupActivity, "통신 실패.", Toast.LENGTH_SHORT).show()
+                Log.d("SINGUP/SERVER-COM", "통신 실패ㅠㅠ {$t.message}")
+            }
+
+        })
     }
 }

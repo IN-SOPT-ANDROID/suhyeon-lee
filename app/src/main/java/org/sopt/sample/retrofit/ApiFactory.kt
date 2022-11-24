@@ -10,6 +10,7 @@ import org.sopt.sample.retrofit.ApiFactory.retrofit_sopt
 import retrofit2.Retrofit
 
 // [솝트 4차 세미나에서 한 부분]
+// 레트로핏 빌더를 이용해 레트로핏 클라이언트 객체를 생성한다
 object ApiFactory {
     const val URL_REQRES: String = "https://reqres.in/"
     const val URL_SOPT: String = "http://3.39.169.52:3000/"
