@@ -2,7 +2,9 @@ package org.sopt.sample.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import org.sopt.sample.databinding.ItemHomeUserBinding
 import org.sopt.sample.retrofit.ReqresResponse
 
@@ -13,13 +15,16 @@ class UserInfoAdapter(
     private val userList : List<ReqresResponse.Data>
 ) : RecyclerView.Adapter<UserInfoAdapter.MyViewHolder>() {
 
-    // 0) MyViewHolder 클래스를 생성한다
+    // 0) MyViewHolder 클래스를 정의한다
     inner class MyViewHolder(
         private val binding: ItemHomeUserBinding
     ) : RecyclerView.ViewHolder(binding.root) { // RecyclerView.ViewHolder 클래스를 상속받는다
         fun onBind(data: ReqresResponse.Data) {
             binding.tvUserName.text = data.first_name + " " + data.last_name
             binding.tvUserEmail.text = data.email
+            Glide.with(binding.root)
+                .load(data.avatar)
+                .into(binding.imgUser)
         }
     }
 
