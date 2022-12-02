@@ -28,7 +28,7 @@
         app:layout_constraintTop_toBottomOf="@id/txt_title" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/id_input"
+        android:id="@+id/id_input_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,6 +37,7 @@
         app:layout_constraintTop_toBottomOf="@id/txt_id_title">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/id_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="아이디를 입력해주세요..." />
@@ -51,10 +52,10 @@
         android:layout_marginTop="50dp"
         android:layout_marginStart="30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/id_input" />
+        app:layout_constraintTop_toBottomOf="@id/id_input_layout" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/pw_input"
+        android:id="@+id/pw_input_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -63,6 +64,7 @@
         app:layout_constraintTop_toBottomOf="@id/txt_pw_title">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/pw_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="비밀번호를 입력해주세요..." />
@@ -74,7 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:layout_marginHorizontal="20dp"
-        app:layout_constraintTop_toBottomOf="@id/pw_input"
+        app:layout_constraintTop_toBottomOf="@id/pw_input_layout"
         android:text="LOGIN" />
 
     <Button

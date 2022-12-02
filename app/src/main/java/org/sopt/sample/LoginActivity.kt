@@ -51,7 +51,7 @@ class LoginActivity: AppCompatActivity() {
                     Snackbar.make(binding.root, "회원가입이 완료되었습니다!", Snackbar.LENGTH_SHORT).show()
                     // SignupActivity에서 입력받은 id, pw 정보가 이 LoginActivity에서 그대로 보이게
                     binding.idInput.setText(id)
-                    binding.pwInput.setText(pw)
+                    binding.pwInput.setText(id)
             }
         }
     }
