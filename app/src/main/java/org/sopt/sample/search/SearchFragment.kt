@@ -1,0 +1,6 @@
+package org.sopt.sample.search
+
+import androidx.fragment.app.Fragment
+
+class SearchFragment: Fragment() {
+}
