@@ -1,42 +1,43 @@
-package org.sopt.sample
+package org.sopt.sample.signupAct
 
-import android.R.attr.button
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import org.sopt.sample.LoginActivity
+import org.sopt.sample.R
 import org.sopt.sample.databinding.ActivitySignupBinding
-import org.sopt.sample.retrofit.ServicePool
-import org.sopt.sample.retrofit.SignupReqDTO
-import org.sopt.sample.retrofit.SignupResDTO
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class SignupActivity: AppCompatActivity() {
-    private lateinit var binding: ActivitySignupBinding
+    //private lateinit var binding: ActivitySignupBinding
     // [4주차] private val signupService = ServicePool.srvc_sopt
-    // [7주차]
+
+    // [6주차 실습]
     private val viewModel by viewModels<SignupViewModel>()
+    // [6주차 과제]
+    private lateinit var binding: ActivitySignupBinding
+    private lateinit var inputViewModel: SingupInputViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySignupBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        watchInput()
-        clickBtn()
-    } // onCreate()
 
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_signup)
+        binding.lifecycleOwner = this
+
+        inputViewModel = ViewModelProvider(this).get(SingupInputViewModel(application)::class.java)
+        binding.vm = inputViewModel
+
+        // [6주차 과제] check if input is valid
+        inputViewModel.setup(this, this)
+        //watchInput()
+        clickBtn()
+    }
+
+    /*
     private fun watchInput() {
         var par = object : TextWatcher {
             // 1) et는 uneditable 상태, 입력 전에 호출
@@ -53,6 +54,7 @@ class SignupActivity: AppCompatActivity() {
         binding.pwInput.addTextChangedListener(par)
         binding.mbtiInput.addTextChangedListener(par)
     }
+    */
 
     // 회원가입 버튼이 클릭되면
     private fun clickBtn() {

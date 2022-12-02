@@ -2,7 +2,6 @@ package org.sopt.sample
 
 import android.app.Activity
 import android.content.Intent
-import android.content.Intent.getIntent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -12,12 +11,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import org.sopt.sample.databinding.ActivityLoginBinding
-import org.sopt.sample.retrofit.LoginReqDTO
-import org.sopt.sample.retrofit.LoginResDTO
-import org.sopt.sample.retrofit.ServicePool
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import org.sopt.sample.signupAct.SignupActivity
 
 
 class LoginActivity: AppCompatActivity() {
@@ -35,6 +29,7 @@ class LoginActivity: AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setResultSignUp()
+
         clickLoginBtn()
         clickSignupBtn()
     } // onCreate()
@@ -51,7 +46,7 @@ class LoginActivity: AppCompatActivity() {
                     Snackbar.make(binding.root, "회원가입이 완료되었습니다!", Snackbar.LENGTH_SHORT).show()
                     // SignupActivity에서 입력받은 id, pw 정보가 이 LoginActivity에서 그대로 보이게
                     binding.idInput.setText(id)
-                    binding.pwInput.setText(id)
+                    binding.pwInput.setText(pw)
             }
         }
     }

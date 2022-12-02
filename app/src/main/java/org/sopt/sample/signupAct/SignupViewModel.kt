@@ -1,4 +1,4 @@
-package org.sopt.sample
+package org.sopt.sample.signupAct
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -11,6 +11,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+// 서버 통신을 위한 ViewModel
 class SignupViewModel : ViewModel(){
     private val _signupResult: MutableLiveData<SignupResDTO> = MutableLiveData()
     val signupResult: LiveData<SignupResDTO> = _signupResult
