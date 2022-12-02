@@ -20,7 +20,7 @@ class LoginActivity: AppCompatActivity() {
     private var id: String = ""
     private var pw: String = ""
     private var mbti: String = ""
-    // [4주차] private val loginService = ServicePool.srvc_sopt
+
     // [7주차] viewModel : live data가 저장돼있는 ViewModel
     private val viewModel by viewModels<LoginViewModel>()
 
@@ -54,9 +54,6 @@ class LoginActivity: AppCompatActivity() {
     private fun clickLoginBtn() {
         // 1) 로그인 버튼이 클릭되면
         binding.btnLogin.setOnClickListener {
-            // [4주차]
-            // tryLogin()
-
             // [7주차] ViewModel-LiveData로 서버 통신 구현
             viewModel.login(
                 binding.idInput.text.toString(),
@@ -82,43 +79,6 @@ class LoginActivity: AppCompatActivity() {
             }
         }
     }
-
-    /* [4주차] enqueue 코드(callback 구조)로 서버 통신 구현
-    private fun tryLogin() {
-        loginService.login(
-            LoginReqDTO(binding.idInput.text.toString(), binding.pwInput.text.toString())
-        ).enqueue(object: Callback<LoginResDTO> {
-            override fun onResponse(
-                call: Call<LoginResDTO>,
-                response: Response<LoginResDTO>
-            ) {
-                if (response.isSuccessful) {
-                    Toast.makeText(this@LoginActivity, "로그인 성공!", Toast.LENGTH_SHORT).show()
-                    Log.d("LOGIN/SUCCESS", "LOGIN 성공!! $response")
-                    val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                    //intent.putExtra("id", binding.idInput.toString())
-                    //intent.putExtra("mbti", binding.pwInput.toString())
-                    startActivity(intent)
-                }
-                else {
-                    Toast.makeText(this@LoginActivity, "로그인이 실패했습니다.", Toast.LENGTH_SHORT).show()
-                    Log.d(
-                        "LOGIN/FAIL",
-                        "$response, ${binding.idInput.text}, ${binding.pwInput.text}"
-                    )
-                }
-            }
-
-            override fun onFailure(
-                call: Call<LoginResDTO>,
-                t: Throwable
-            ) {
-                Snackbar.make(binding.root, "서버통신 실패", Snackbar.LENGTH_SHORT).show()
-                Log.d("LOGIN/SERVER-COM", "LOGIN 실패ㅠㅠ {$t.message}")
-            }
-        })
-    }
-    */
 
     // 회원가입 버튼이 클릭되면 (콜백함수)
     private fun clickSignupBtn() {
