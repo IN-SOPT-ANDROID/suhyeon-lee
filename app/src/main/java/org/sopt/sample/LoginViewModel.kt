@@ -16,10 +16,6 @@ import retrofit2.Response
 // 뷰모델은 데이터의 변경 사항을 알려주는 라이브 데이터를 가진다
 class LoginViewModel : ViewModel() {
 
-    companion object {
-        const val TAG: String = "로그"
-    }
-
     // LiveData : observer 패턴, 데이터의 변경 사항을 알 수 있음
     // MutableLiveData(값 수정 가능) or 그냥 LiveData(값 수정 불가)
 
