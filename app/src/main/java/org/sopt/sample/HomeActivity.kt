@@ -1,13 +1,16 @@
 package org.sopt.sample
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.sopt.sample.databinding.ActivityHomeBinding
 import org.sopt.sample.gallery.GalleryFragment
 import org.sopt.sample.home.HomeFragment
 import org.sopt.sample.search.SearchFragment
+// import org.sopt.sample.databinding.ActivitySignupBinding
 
-class HomeActivity: AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
