@@ -1,14 +1,10 @@
 package org.sopt.sample.retrofit
 
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import org.sopt.sample.retrofit.ApiFactory.retrofit_reqres
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 // [수현이가 책 보고 찾아서 해본 부분]
-class RetrofitConnection {
+class ApiFactoryMyself {
     // 객체를 하나만 생성하는 싱글턴 패턴을 적용한다
     companion object {
         // API 서버의 주소가 BASE_URL이 된다

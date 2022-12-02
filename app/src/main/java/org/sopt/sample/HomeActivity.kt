@@ -2,12 +2,10 @@ package org.sopt.sample
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.commit
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.sopt.sample.databinding.ActivityHomeBinding
-import org.sopt.sample.gallery.GalleryFragment
-import org.sopt.sample.home.HomeFragment
-import org.sopt.sample.search.SearchFragment
+import org.sopt.sample.galleryFrag.GalleryFragment
+import org.sopt.sample.homeFrag.HomeFragment
+import org.sopt.sample.searchFrag.SearchFragment
 // import org.sopt.sample.databinding.ActivitySignupBinding
 
 class HomeActivity : AppCompatActivity() {

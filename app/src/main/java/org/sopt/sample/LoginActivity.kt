@@ -1,27 +1,17 @@
 package org.sopt.sample
 
-import android.R.attr.button
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import org.sopt.sample.databinding.ActivityLoginBinding
-import org.sopt.sample.home.UserInfoAdapter
-import org.sopt.sample.retrofit.LoginReqDTO
-import org.sopt.sample.retrofit.LoginResDTO
-import org.sopt.sample.retrofit.ReqresResponse
-import org.sopt.sample.retrofit.ServicePool
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import org.sopt.sample.signupAct.SignupActivity
 
 
 class LoginActivity: AppCompatActivity() {
@@ -30,13 +20,16 @@ class LoginActivity: AppCompatActivity() {
     private var id: String = ""
     private var pw: String = ""
     private var mbti: String = ""
-    private val loginService = ServicePool.srvc_sopt
+
+    // [7주차] viewModel : live data가 저장돼있는 ViewModel
+    private val viewModel by viewModels<LoginViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setResultSignUp()
+
         clickLoginBtn()
         clickSignupBtn()
     } // onCreate()
@@ -58,22 +51,32 @@ class LoginActivity: AppCompatActivity() {
         }
     }
 
-    // 로그인 버튼이 클릭되면 (콜백함수)
     private fun clickLoginBtn() {
+        // 1) 로그인 버튼이 클릭되면
         binding.btnLogin.setOnClickListener {
-            tryLogin()
+            // [7주차] ViewModel-LiveData로 서버 통신 구현
+            viewModel.login(
+                binding.idInput.text.toString(),
+                binding.pwInput.text.toString()
+            )
         }
-    }
 
-    // 입력 받은 로그인 정보를 확인 - 서버 통신에서 바뀌어야지?
-    private fun checkInput(): Boolean {
-        if (id == binding.idInput.text.toString() && pw == binding.pwInput.text.toString()) {
-            Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
-            return true
-        }
-        else {
-            Snackbar.make(binding.root, "가입 정보가 없습니다. 회원가입을 해주세요.", Snackbar.LENGTH_SHORT).show()
-            return false
+        // [7주차] 2) LiveData의 observe() 함수를 통해 observe 객체를 등록한다
+        // this : 생명주기를 관장하는 객체로,
+        // activity에서는 this(activity의 생명주기에 맞춰 데이터 구독)
+        // fragment에서는 viewLifecycleOwner를 지정해주면 된다
+        // 이 람다 객체가 observer(관찰자)다 (코틀린에서는 함수도 객체이기 때문)
+        // observe 메소드가 LiveData에서 데이터를 관찰할 관찰자를 등록하는 메소드
+        viewModel.loginResult.observe(this) {
+            if (it.status == 200) {
+                Toast.makeText(this@LoginActivity, "환영합니다", Toast.LENGTH_SHORT).show()
+                Log.d("로그인", "live data 자료형 loginResult의 value가 변경됨이 관찰됐고 로그인 잘 됐다는군")
+                val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                startActivity(intent)
+            }
+            else {
+                Toast.makeText(this@LoginActivity, "로그인 실패", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -83,40 +86,5 @@ class LoginActivity: AppCompatActivity() {
             val intent = Intent(this, SignupActivity::class.java)
             resultLauncher.launch(intent)
         }
-    }
-
-    private fun tryLogin() {
-        loginService.login(
-            LoginReqDTO(binding.idInput.text.toString(), binding.pwInput.text.toString())
-        ).enqueue(object: Callback<LoginResDTO> {
-            override fun onResponse(
-                call: Call<LoginResDTO>,
-                response: Response<LoginResDTO>
-            ) {
-                if (response.isSuccessful) {
-                    Toast.makeText(this@LoginActivity, "로그인 성공!", Toast.LENGTH_SHORT).show()
-                    Log.d("LOGIN/SUCCESS", "LOGIN 성공!! $response")
-                    val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                    //intent.putExtra("id", binding.idInput.toString())
-                    //intent.putExtra("mbti", binding.pwInput.toString())
-                    startActivity(intent)
-                }
-                else {
-                    Toast.makeText(this@LoginActivity, "로그인이 실패했습니다.", Toast.LENGTH_SHORT).show()
-                    Log.d(
-                        "LOGIN/FAIL",
-                        "$response, ${binding.idInput.text}, ${binding.pwInput.text}"
-                    )
-                }
-            }
-
-            override fun onFailure(
-                call: Call<LoginResDTO>,
-                t: Throwable
-            ) {
-                Snackbar.make(binding.root, "서버통신 실패", Snackbar.LENGTH_SHORT).show()
-                Log.d("LOGIN/SERVER-COM", "LOGIN 실패ㅠㅠ {$t.message}")
-            }
-        })
     }
 }
