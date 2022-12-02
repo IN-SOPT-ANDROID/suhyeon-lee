@@ -15,17 +15,28 @@ object ApiFactory {
     const val URL_REQRES: String = "https://reqres.in/"
     const val URL_SOPT: String = "http://3.39.169.52:3000/"
 
-    val retrofit_reqres by lazy {
+    // [7주차] logging interceptor
+    private val client by lazy {
+        OkHttpClient.Builder()
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+            ).build()
+    }
+
+    val retrofit_reqres: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(URL_REQRES)
             .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
             .build()
     }
 
-    val retrofit_sopt by lazy {
+    val retrofit_sopt: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(URL_SOPT)
             .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .client(client)
             .build()
     }
 
