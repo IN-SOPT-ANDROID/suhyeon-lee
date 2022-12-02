@@ -1,8 +1,7 @@
-package org.sopt.sample.home
+package org.sopt.sample.homeFrag
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import org.sopt.sample.databinding.ItemHomeUserBinding

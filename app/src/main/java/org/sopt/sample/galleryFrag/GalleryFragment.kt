@@ -1,4 +1,4 @@
-package org.sopt.sample.gallery
+package org.sopt.sample.galleryFrag
 
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +9,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import coil.load
-import org.sopt.sample.R
 import org.sopt.sample.databinding.FragmentGalleryBinding
 
 class GalleryFragment: Fragment() {
