@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import org.sopt.sample.databinding.ActivitySignupBinding
@@ -24,7 +25,9 @@ import retrofit2.Response
 
 class SignupActivity: AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
-    private val signupService = ServicePool.srvc_sopt
+    // [4주차] private val signupService = ServicePool.srvc_sopt
+    // [7주차]
+    private val viewModel by viewModels<SignupViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,44 +54,30 @@ class SignupActivity: AppCompatActivity() {
         binding.mbtiInput.addTextChangedListener(par)
     }
 
-    private fun check(): Boolean {
-        if (binding.idInput.text.length < 6 || binding.idInput.text.length > 10) {
-            Snackbar.make(binding.root, "아이디는 6~10자여야 합니다.", Snackbar.LENGTH_SHORT).show()
-            return false
-        }
-        if (binding.pwInput.text.length < 8 || binding.pwInput.text.length > 12) {
-            Snackbar.make(binding.root, "비밀번호는 8~12자여야 합니다.", Snackbar.LENGTH_SHORT).show()
-            return false
-        }
-        if (!(binding.mbtiInput.text.toString().equals("ENFJ", true) ||
-            binding.mbtiInput.text.toString().equals("INFJ", true) ||
-            binding.mbtiInput.text.toString().equals("INTJ", true) ||
-            binding.mbtiInput.text.toString().equals("ENTJ", true) ||
-            binding.mbtiInput.text.toString().equals("ENFP", true) ||
-            binding.mbtiInput.text.toString().equals("INFP", true) ||
-            binding.mbtiInput.text.toString().equals("INTP", true) ||
-            binding.mbtiInput.text.toString().equals("ENTP", true) ||
-            binding.mbtiInput.text.toString().equals("ESFP", true) ||
-            binding.mbtiInput.text.toString().equals("ISFP", true) ||
-            binding.mbtiInput.text.toString().equals("ISTP", true) ||
-            binding.mbtiInput.text.toString().equals("ESTP", true) ||
-            binding.mbtiInput.text.toString().equals("ESFJ", true) ||
-            binding.mbtiInput.text.toString().equals("ISFJ", true) ||
-            binding.mbtiInput.text.toString().equals("ISTJ", true) ||
-            binding.mbtiInput.text.toString().equals("ESTJ", true))
-        ) {
-            Snackbar.make(binding.root, "MBTI를 제대로 입력해주세요.", Snackbar.LENGTH_SHORT).show()
-            return false
-        }
-        else return true
-    }
-
+    // 회원가입 버튼이 클릭되면
     private fun clickBtn() {
         binding.btnSignup.setOnClickListener {
-            trySignin()
+            viewModel.signup(
+                binding.idInput.text.toString(),
+                binding.pwInput.text.toString(),
+                binding.mbtiInput.text.toString()
+            )
+        }
+
+        viewModel.signupResult.observe(this) {
+            if (it.status == 201) {
+                Log.d("회원가입", "live data 자료형 signupResult의 value가 변경됨이 관찰됐고 회원가입이 잘 됐다는군")
+                val intent = Intent(this@SignupActivity, LoginActivity::class.java)
+                intent.putExtra("id", binding.idInput.text.toString())
+                intent.putExtra("pw", binding.pwInput.text.toString())
+                intent.putExtra("mbti", binding.mbtiInput.text.toString())
+                setResult(RESULT_OK, intent)
+                finish()
+            }
         }
     }
 
+    /* [4주차] 서버 통신 : callback 구조
     private fun trySignin() {
         signupService.signup(
             SignupReqDTO(
@@ -127,4 +116,39 @@ class SignupActivity: AppCompatActivity() {
 
         })
     }
+    */
+
+    /* [1주차]
+    private fun check(): Boolean {
+        if (binding.idInput.text.length < 6 || binding.idInput.text.length > 10) {
+            Snackbar.make(binding.root, "아이디는 6~10자여야 합니다.", Snackbar.LENGTH_SHORT).show()
+            return false
+        }
+        if (binding.pwInput.text.length < 8 || binding.pwInput.text.length > 12) {
+            Snackbar.make(binding.root, "비밀번호는 8~12자여야 합니다.", Snackbar.LENGTH_SHORT).show()
+            return false
+        }
+        if (!(binding.mbtiInput.text.toString().equals("ENFJ", true) ||
+                    binding.mbtiInput.text.toString().equals("INFJ", true) ||
+                    binding.mbtiInput.text.toString().equals("INTJ", true) ||
+                    binding.mbtiInput.text.toString().equals("ENTJ", true) ||
+                    binding.mbtiInput.text.toString().equals("ENFP", true) ||
+                    binding.mbtiInput.text.toString().equals("INFP", true) ||
+                    binding.mbtiInput.text.toString().equals("INTP", true) ||
+                    binding.mbtiInput.text.toString().equals("ENTP", true) ||
+                    binding.mbtiInput.text.toString().equals("ESFP", true) ||
+                    binding.mbtiInput.text.toString().equals("ISFP", true) ||
+                    binding.mbtiInput.text.toString().equals("ISTP", true) ||
+                    binding.mbtiInput.text.toString().equals("ESTP", true) ||
+                    binding.mbtiInput.text.toString().equals("ESFJ", true) ||
+                    binding.mbtiInput.text.toString().equals("ISFJ", true) ||
+                    binding.mbtiInput.text.toString().equals("ISTJ", true) ||
+                    binding.mbtiInput.text.toString().equals("ESTJ", true))
+        ) {
+            Snackbar.make(binding.root, "MBTI를 제대로 입력해주세요.", Snackbar.LENGTH_SHORT).show()
+            return false
+        }
+        else return true
+    }
+    */
 }
